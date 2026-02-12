@@ -3,230 +3,526 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAGAZYNY MOCY | NEXBE Corporate</title>
+    <title>Magazyny Mocy - Konfigurator i Kalkulator ROI | NEXBE Partner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { brandRed: '#E31E24', brandBlack: '#000000', brandWhite: '#FFFFFF' },
-                    borderRadius: { 'brand': '12px' }
+                    colors: {
+                        primary: '#0d9488', // Kolor "morski" - Magazyny Mocy
+                        secondary: '#0f172a', // Ciemny granat
+                    }
                 }
             }
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .bg-lightning {
-            background-color: #ffffff;
-            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l-10 40h15l-15 40 40-50h-15l15-30z' fill='%20%23e5e7eb' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
-        }
-        .hero-overlay { background: linear-gradient(90deg, rgba(227,30,36,0.9) 0%, rgba(0,0,0,0.4) 100%); }
+        .tile-selected { border-color: #0d9488; background-color: #f0fdfa; }
         .step-hidden { display: none; }
-        .input-corporate { @apply w-full bg-gray-50 border-b-2 border-gray-200 p-4 font-bold focus:outline-none focus:border-brandRed transition-colors; }
     </style>
 </head>
-<body class="bg-brandWhite text-brandBlack">
+<body class="bg-gray-50 font-sans text-gray-800">
 
-    <header class="relative h-[60vh] flex items-center overflow-hidden bg-black">
-        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070" class="absolute inset-0 w-full h-full object-cover opacity-60">
-        <div class="absolute inset-0 hero-overlay"></div>
-        <div class="container mx-auto px-6 relative z-10 text-white text-center">
-            <h1 class="text-5xl font-extrabold uppercase tracking-tighter mb-4">Magazyny Mocy</h1>
-            <p class="text-xl font-light opacity-80">Konfiguracja systemów Nexbe Corporate</p>
+    <header class="bg-secondary text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1558449028-b53a39d100fc?q=80&w=1920')] bg-cover bg-center opacity-10"></div>
+        <div class="container mx-auto px-6 py-20 relative z-10 text-center lg:text-left lg:flex items-center justify-between">
+            <div class="lg:w-1/2">
+                <h1 class="text-4xl lg:text-5xl font-extrabold leading-tight mb-6">
+                    <span class="text-primary">Magazyny Mocy.</span><br>
+                    Ile możesz zaoszczędzić?
+                </h1>
+                <p class="text-lg text-gray-300 mb-8">
+                    Skonfiguruj system w 2 minuty i sprawdź swoją indywidualną kalkulację oszczędności.
+                </p>
+                <a href="#kalkulator" class="bg-primary hover:bg-teal-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition transform hover:scale-105 inline-block">
+                    Rozpocznij konfigurację <span class="text-sm block font-normal opacity-80">Bezpłatnie, bez zobowiązań</span>
+                </a>
+            </div>
+             <div class="hidden lg:block lg:w-1/3">
+                 <div class="h-64 w-full bg-gradient-to-tr from-primary/20 to-transparent rounded-xl border-2 border-primary/30 flex items-center justify-center text-primary/50">Wizualizacja Magazynu</div>
+            </div>
         </div>
     </header>
 
-    <section id="kalkulator" class="py-20">
-        <div class="container mx-auto px-6 max-w-5xl">
-            <div class="bg-white rounded-brand border border-gray-100 shadow-2xl overflow-hidden">
-                <div id="progress-bar" class="bg-brandRed h-1.5 transition-all duration-700" style="width: 33%"></div>
-
-                <div class="p-10 lg:p-16">
-                    <div id="step-1">
-                        <h2 class="text-2xl font-black uppercase mb-10 text-center">Wybierz typ inwestycji</h2>
-                        <div class="grid md:grid-cols-3 gap-6">
-                            <div onclick="selectScenario(1, this)" class="scenario-tile cursor-pointer border-2 border-gray-100 rounded-brand p-8 text-center hover:border-brandRed transition-all">
-                                <span class="text-3xl block mb-4">🏠</span>
-                                <h4 class="font-bold uppercase text-sm">Retrofit AC</h4>
-                            </div>
-                            <div onclick="selectScenario(2, this)" class="scenario-tile cursor-pointer border-2 border-gray-100 rounded-brand p-8 text-center hover:border-brandRed transition-all">
-                                <span class="text-3xl block mb-4">☀️</span>
-                                <h4 class="font-bold uppercase text-sm">Nowy System</h4>
-                            </div>
-                            <div onclick="selectScenario(3, this)" class="scenario-tile cursor-pointer border-2 border-gray-100 rounded-brand p-8 text-center hover:border-brandRed transition-all">
-                                <span class="text-3xl block mb-4">🔄</span>
-                                <h4 class="font-bold uppercase text-sm">Modernizacja</h4>
-                            </div>
-                        </div>
-                        <div class="mt-12 text-center">
-                            <button onclick="nextStep()" id="btn-next-1" disabled class="bg-gray-200 text-gray-400 font-black py-4 px-12 rounded-brand cursor-not-allowed">DALEJ</button>
-                        </div>
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12 text-secondary">Dlaczego magazyn energii?</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center p-6 rounded-xl hover:shadow-xl transition bg-gray-50">
+                    <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
                     </div>
-
-                    <div id="step-2" class="step-hidden">
-                        <div class="max-w-md mx-auto space-y-8">
-                            <div>
-                                <label class="text-[10px] font-black uppercase tracking-widest text-brandRed">Moc PV (kWp)</label>
-                                <input type="number" id="pv-power" class="input-corporate text-2xl" placeholder="np. 6.5">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase tracking-widest text-brandRed">Pojemność</label>
-                                <select id="battery-capacity" class="input-corporate">
-                                    <option value="10">10.24 kWh</option>
-                                    <option value="15">15.36 kWh</option>
-                                    <option value="20">20.48 kWh</option>
-                                </select>
-                            </div>
-                            <div class="flex justify-between pt-6">
-                                <button onclick="prevStep()" class="font-bold text-xs uppercase underline">Wstecz</button>
-                                <button onclick="nextStep()" class="bg-brandRed text-white font-black py-4 px-10 rounded-brand">Dalej</button>
-                            </div>
-                        </div>
+                    <h3 class="text-xl font-bold mb-2">Oszczędności do 70%</h3>
+                    <p class="text-gray-600">Zwiększ autokonsumpcję energii i zmniejsz rachunki za prąd.</p>
+                </div>
+                 <div class="text-center p-6 rounded-xl hover:shadow-xl transition bg-gray-50">
+                    <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" /></svg>
                     </div>
-
-                    <div id="step-3" class="step-hidden">
-                        <div class="max-w-md mx-auto space-y-4">
-                            <label class="flex items-center p-5 border rounded-brand cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" id="opt-backup" class="w-5 h-5 accent-brandRed mr-4">
-                                <span class="font-bold text-sm uppercase">Zasilanie awaryjne SZR</span>
-                            </label>
-                            <label class="flex items-center p-5 border rounded-brand cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" id="opt-ems" class="w-5 h-5 accent-brandRed mr-4" checked>
-                                <span class="font-bold text-sm uppercase">System EMS Nexbe</span>
-                            </label>
-                            <button onclick="calculateResults()" class="w-full bg-brandRed text-white font-black py-5 rounded-brand mt-6 shadow-xl shadow-red-200">OBLICZ ROI I KOSZTY</button>
-                        </div>
+                    <h3 class="text-xl font-bold mb-2">Niezależność</h3>
+                    <p class="text-gray-600">Uniezależnij się od rosnących cen energii i awarii sieci.</p>
+                </div>
+                 <div class="text-center p-6 rounded-xl hover:shadow-xl transition bg-gray-50">
+                    <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" /></svg>
                     </div>
-
-                    <div id="results-section" class="hidden">
-                        <div class="grid lg:grid-cols-2 gap-12 border-b border-gray-100 pb-12">
-                            <div>
-                                <h3 class="text-2xl font-black uppercase mb-6 tracking-tighter">Podsumowanie</h3>
-                                <div class="space-y-3 text-sm">
-                                    <div class="flex justify-between"><span>Brutto:</span> <span id="res-gross" class="font-bold">0 zł</span></div>
-                                    <div class="flex justify-between text-brandRed font-bold"><span>Dotacje:</span> <span id="res-grant">0 zł</span></div>
-                                    <div class="flex justify-between font-black text-xl pt-4 border-t"><span>NETTO:</span> <span id="res-final" class="text-brandRed">0 zł</span></div>
-                                </div>
-                                <div class="mt-8">
-                                    <canvas id="roiChart" height="200"></canvas>
-                                </div>
-                            </div>
-
-                            <div class="bg-gray-50 p-8 rounded-brand">
-                                <h3 class="text-lg font-black uppercase mb-4 tracking-tight">Otrzymaj pełną ofertę na e-mail</h3>
-                                <form id="contact-form" action="https://formspree.io/f/mojnjgay" method="POST" class="space-y-4">
-                                    <input type="hidden" name="Wybrana Pojemność" id="form-cap">
-                                    <input type="hidden" name="Koszt Finalny" id="form-price">
-                                    <input type="hidden" name="Dotacja" id="form-grant">
-                                    
-                                    <input type="text" name="Imię i Nazwisko" placeholder="Imię i Nazwisko" required class="input-corporate text-sm">
-                                    <input type="email" name="Email" placeholder="Twój adres e-mail" required class="input-corporate text-sm">
-                                    <input type="tel" name="Telefon" placeholder="Numer telefonu" required class="input-corporate text-sm">
-                                    <textarea name="Wiadomość" placeholder="Miejsce montażu / Dodatkowe pytania" class="input-corporate text-sm h-24"></textarea>
-                                    
-                                    <button type="submit" class="w-full bg-brandBlack text-white font-black py-4 rounded-brand hover:bg-brandRed transition-colors">WYŚLIJ ZAPYTANIE</button>
-                                    <p class="text-[9px] text-gray-400 mt-4 uppercase">Klikając przycisk wyrażasz zgodę na kontakt w celu przedstawienia oferty Nexbe.</p>
-                                </form>
-                                <div id="form-success" class="hidden text-center p-4 bg-green-100 text-green-700 font-bold rounded-brand">
-                                    Dziękujemy! Twoje zapytanie zostało wysłane.
-                                </div>
-                            </div>
-                        </div>
+                    <h3 class="text-xl font-bold mb-2">Zasilanie awaryjne</h3>
+                    <p class="text-gray-600">Chroń swój dom przed blackoutami i przerwami w dostawie prądu.</p>
+                </div>
+                 <div class="text-center p-6 rounded-xl hover:shadow-xl transition bg-gray-50">
+                    <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
                     </div>
+                    <h3 class="text-xl font-bold mb-2">Dotacje do 16 000 zł</h3>
+                    <p class="text-gray-600">Skorzystaj z programu Mój Prąd i ulgi termomodernizacyjnej.</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-6">
+             <h2 class="text-3xl font-bold text-center mb-12 text-secondary">Jak to działa?</h2>
+             <div class="grid md:grid-cols-3 gap-8 text-center">
+                 <div class="relative">
+                     <span class="text-6xl font-bold text-gray-200 absolute top-0 left-1/2 -translate-x-1/2 -z-10">01</span>
+                     <h3 class="text-xl font-bold mt-8 mb-2">Skonfiguruj system</h3>
+                     <p class="text-gray-600">Odpowiedz na kilka pytań o swojej instalacji PV i potrzebach energetycznych.</p>
+                 </div>
+                 <div class="relative">
+                    <span class="text-6xl font-bold text-gray-200 absolute top-0 left-1/2 -translate-x-1/2 -z-10">02</span>
+                    <h3 class="text-xl font-bold mt-8 mb-2">Otrzymaj ofertę</h3>
+                    <p class="text-gray-600">Dobierzemy optymalny magazyn i pokażemy kalkulację oszczędności.</p>
+                </div>
+                <div class="relative">
+                    <span class="text-6xl font-bold text-gray-200 absolute top-0 left-1/2 -translate-x-1/2 -z-10">03</span>
+                    <h3 class="text-xl font-bold mt-8 mb-2">Umów audyt</h3>
+                    <p class="text-gray-600">Bezpłatny audyt techniczny i finalna wycena montażu.</p>
+                </div>
+             </div>
+        </div>
+    </section>
+
+    <section id="kalkulator" class="py-20">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <h2 class="text-3xl font-bold text-center mb-10 text-secondary">Konfigurator Magazynu Energii</h2>
+
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                
+                <div class="bg-gray-200 h-2 w-full">
+                    <div id="progress-bar" class="bg-primary h-2 transition-all duration-500" style="width: 33%"></div>
+                </div>
+
+                <div class="p-8 lg:p-12">
+
+                    <div id="step-1">
+                        <h3 class="text-2xl font-bold mb-6 text-center">Krok 1: Wybierz swoją sytuację</h3>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div onclick="selectScenario(1)" class="scenario-tile cursor-pointer border-2 border-gray-200 rounded-xl p-6 text-center hover:border-primary transition group">
+                                <div class="text-4xl mb-4 group-hover:text-primary transition">🏠⚡</div>
+                                <h4 class="font-bold text-lg mb-2">Mam już PV, chcę dodać magazyn</h4>
+                                <p class="text-sm text-gray-600">Twój obecny falownik zostaje, dodajemy magazyn AC.</p>
+                            </div>
+                            <div onclick="selectScenario(2)" class="scenario-tile cursor-pointer border-2 border-gray-200 rounded-xl p-6 text-center hover:border-primary transition group">
+                                <div class="text-4xl mb-4 group-hover:text-primary transition">☀️🔋</div>
+                                <h4 class="font-bold text-lg mb-2">Planuję nową instalację PV z magazynem</h4>
+                                <p class="text-sm text-gray-600">Kompletny system: panele + falownik hybrydowy + magazyn DC.</p>
+                            </div>
+                            <div onclick="selectScenario(3)" class="scenario-tile cursor-pointer border-2 border-gray-200 rounded-xl p-6 text-center hover:border-primary transition group">
+                                <div class="text-4xl mb-4 group-hover:text-primary transition">🔄🔋</div>
+                                <h4 class="font-bold text-lg mb-2">Chcę wymienić falownik i dodać magazyn</h4>
+                                <p class="text-sm text-gray-600">Modernizacja istniejącej instalacji do systemu hybrydowego.</p>
+                            </div>
+                        </div>
+                        <div class="mt-8 text-right">
+                             <button onclick="nextStep()" id="btn-step1-next" class="bg-gray-400 text-white font-bold py-3 px-8 rounded-lg cursor-not-allowed" disabled>Dalej ></button>
+                        </div>
+                    </div>
+
+                    <div id="step-2" class="step-hidden">
+                        <h3 class="text-2xl font-bold mb-6 text-center">Krok 2: Parametry systemu</h3>
+                        <div class="max-w-xl mx-auto space-y-6">
+                            
+                            <div>
+                                <label id="label-pv-power" class="block text-lg font-medium mb-2">Moc Twojej instalacji PV (kWp):</label>
+                                <input type="number" id="pv-power" class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-primary focus:ring-primary" placeholder="np. 6.5">
+                            </div>
+
+                             <div>
+                                <label class="block text-lg font-medium mb-2">Preferowana pojemność magazynu:</label>
+                                <select id="battery-capacity" class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-primary">
+                                    <option value="10">Około 10 kWh (Zalecane do dotacji)</option>
+                                    <option value="15">Około 15 kWh</option>
+                                    <option value="20">Około 20 kWh</option>
+                                </select>
+                                <p class="text-sm text-gray-500 mt-2 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mr-1 text-primary"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" /></svg> Aby uzyskać pełną dotację Mój Prąd, zalecamy min. 9-10 kWh.</p>
+                            </div>
+
+                        </div>
+                        <div class="mt-8 flex justify-between max-w-xl mx-auto">
+                            <button onclick="prevStep()" class="text-gray-600 font-bold py-3 px-8 rounded-lg border border-gray-300 hover:bg-gray-100">< Wstecz</button>
+                            <button onclick="nextStep()" class="bg-primary hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg">Dalej ></button>
+                       </div>
+                    </div>
+
+                    <div id="step-3" class="step-hidden">
+                        <h3 class="text-2xl font-bold mb-6 text-center">Krok 3: Funkcje dodatkowe</h3>
+                        <div class="max-w-xl mx-auto space-y-6">
+                            
+                           <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-primary transition">
+                               <input type="checkbox" id="opt-backup" class="form-checkbox h-6 w-6 text-primary mr-4">
+                               <div>
+                                   <span class="font-bold text-lg block">System Backup (Zasilanie awaryjne)</span>
+                                   <span class="text-sm text-gray-600">Twoje gniazdka będą działać nawet podczas awarii sieci.</span>
+                               </div>
+                           </label>
+
+                           <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-primary transition">
+                                <input type="checkbox" id="opt-ems" class="form-checkbox h-6 w-6 text-primary mr-4" checked>
+                                <div>
+                                    <span class="font-bold text-lg block">System HEMS/EMS (Inteligentne zarządzanie)</span>
+                                    <span class="text-sm text-gray-600">Optymalizacja zużycia energii i przygotowanie pod taryfy dynamiczne.</span>
+                                </div>
+                            </label>
+
+                        </div>
+                        <div class="mt-8 flex justify-between max-w-xl mx-auto">
+                            <button onclick="prevStep()" class="text-gray-600 font-bold py-3 px-8 rounded-lg border border-gray-300 hover:bg-gray-100">< Wstecz</button>
+                            <button onclick="calculateResults()" class="bg-primary hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg animate-pulse">Oblicz moją ofertę i ROI ></button>
+                       </div>
+                    </div>
+                     <div id="results-section" class="hidden mt-10">
+                        <hr class="mb-10 border-gray-200">
+                        <h3 class="text-3xl font-bold text-center mb-8 text-secondary">Twoja Symulacja Inwestycji</h3>
+
+                        <div class="grid lg:grid-cols-2 gap-10">
+                            
+                            <div class="bg-teal-50 p-8 rounded-2xl border border-primary/20 shadow-sm">
+                                <h4 class="text-xl font-bold mb-6 text-primary">Podsumowanie kosztów</h4>
+                                <div class="space-y-4 text-lg">
+                                    <div class="flex justify-between"><span>Szacunkowy koszt (Brutto):</span> <span id="res-gross" class="font-bold">0 zł</span></div>
+                                    <div class="flex justify-between text-green-600"><span>Dotacja "Mój Prąd":</span> <span id="res-grant" class="font-medium">- 0 zł</span></div>
+                                    <div class="flex justify-between text-green-600"><span>Ulga Termomodernizacyjna:</span> <span id="res-tax-relief" class="font-medium">- 0 zł</span></div>
+                                    <hr class="border-primary/30 my-4">
+                                    <div class="flex justify-between text-2xl font-extrabold text-secondary"><span>Koszt finalny po zwrotach:</span> <span id="res-final">0 zł</span></div>
+                                </div>
+                                <div class="mt-8 bg-white p-4 rounded-xl text-center shadow-sm">
+                                    <p class="text-sm text-gray-500 mb-1">Szacunkowa rata miesięczna (kredyt 5 lat):</p>
+                                    <p id="res-loan" class="text-3xl font-bold text-primary">0 zł</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                                <h4 class="text-xl font-bold mb-4 text-secondary text-center">Analiza Zwrotu z Inwestycji (ROI)</h4>
+                                <p class="text-sm text-center text-gray-500 mb-4">Skumulowany koszt energii na przestrzeni 15 lat</p>
+                                <canvas id="roiChart" height="250"></canvas>
+                            </div>
+                        </div>
+
+                         <div class="text-center mt-12">
+                            <h4 class="text-2xl font-bold mb-4">Podoba Ci się ta symulacja?</h4>
+                            <p class="text-gray-600 mb-6">To jest szacunkowa kalkulacja. Umów się na bezpłatny audyt, aby otrzymać wiążącą ofertę.</p>
+                            <button class="bg-secondary hover:bg-gray-900 text-white font-bold py-4 px-10 rounded-full shadow-lg transition transform hover:scale-105">
+                                Umów bezpłatny audyt techniczny
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6 text-center">
+             <h2 class="text-3xl font-bold mb-12 text-secondary">Dlaczego NEXBE?</h2>
+             <div class="grid md:grid-cols-4 gap-8">
+                 <div>
+                     <div class="font-bold text-xl mb-2">Certyfikowany partner</div>
+                     <p class="text-sm text-gray-600">Autoryzowany integrator wiodących marek magazynów energii.</p>
+                 </div>
+                 <div>
+                    <div class="font-bold text-xl mb-2">Pełna obsługa 360°</div>
+                    <p class="text-sm text-gray-600">Od audytu i doboru, przez montaż, aż po serwis gwarancyjny.</p>
+                </div>
+                <div>
+                    <div class="font-bold text-xl mb-2">Wsparcie w dotacjach</div>
+                    <p class="text-sm text-gray-600">Pomagamy w formalnościach do programu Mój Prąd.</p>
+                </div>
+                <div>
+                    <div class="font-bold text-xl mb-2">Gwarancja bezpieczeństwa</div>
+                    <p class="text-sm text-gray-600">Wieloletnia gwarancja producenta i nasze wsparcie techniczne.</p>
+                </div>
+             </div>
+        </div>
+    </section>
+
+    <footer class="bg-secondary text-gray-300 py-8 text-center">
+        <p>© 2024 NEXBE Partner. Wszelkie prawa zastrzeżone.</p>
+        <p class="text-sm mt-2 opacity-60">Kalkulacja ma charakter poglądowy i nie stanowi oferty handlowej w rozumieniu Kodeksu Cywilnego.</p>
+    </footer>
+
+
     <script>
+        // Zmienne stanu
         let currentStep = 1;
         let selectedScenario = 0;
-        let myChart = null;
-        const PRICES = { battery_10: 28000, battery_15: 38000, battery_20: 48000, retrofit: 5500, hybrid: 8500, pv: 4600, backup: 3000, ems: 1800 };
+        let myChart = null; // Uchwyt do wykresu
 
-        function selectScenario(id, el) {
-            selectedScenario = id;
-            document.querySelectorAll('.scenario-tile').forEach(t => t.classList.remove('border-brandRed', 'bg-red-50'));
-            el.classList.add('border-brandRed', 'bg-red-50');
-            const b = document.getElementById('btn-next-1');
-            b.removeAttribute('disabled');
-            b.className = "bg-brandRed text-white font-black py-4 px-12 rounded-brand hover:scale-105 transition-all";
-        }
+        // BAZA CENOWA (Uproszczona na potrzeby demo, bazująca na Twoich plikach)
+        // Wartości są przykładowe i należy je dostosować do realnych cenników
+        const PRICES = {
+            battery_10kWh_DC: 28000,
+            battery_15kWh_DC: 38000,
+            battery_20kWh_DC: 48000,
+            battery_AC_premium: 5000, // Dopłata do wersji AC coupled (Retrofit)
+            hybrid_inverter_cost: 8000, // Koszt falownika hybrydowego
+            swap_labor_cost: 2000, // Dodatkowy koszt robocizny przy wymianie falownika
+            backup_box: 2500,
+            ems_system: 1500,
+            pv_per_kwp: 4500 // Cena za kWp samej instalacji PV (dla scenariusza 2)
+        };
 
+        // Nawigacja
         function nextStep() {
-            document.getElementById(`step-${currentStep}`).classList.add('step-hidden');
-            currentStep++;
-            document.getElementById(`step-${currentStep}`).classList.remove('step-hidden');
-            document.getElementById('progress-bar').style.width = (currentStep/3)*100 + '%';
+            if (currentStep < 3) {
+                document.getElementById(`step-${currentStep}`).classList.add('step-hidden');
+                currentStep++;
+                document.getElementById(`step-${currentStep}`).classList.remove('step-hidden');
+                updateProgressBar();
+            }
         }
 
         function prevStep() {
-            document.getElementById(`step-${currentStep}`).classList.add('step-hidden');
-            currentStep--;
-            document.getElementById(`step-${currentStep}`).classList.remove('step-hidden');
-            document.getElementById('progress-bar').style.width = (currentStep/3)*100 + '%';
+            if (currentStep > 1) {
+                document.getElementById(`results-section`).classList.add('hidden'); // Ukryj wyniki jak się cofamy
+                document.getElementById(`step-${currentStep}`).classList.add('step-hidden');
+                currentStep--;
+                document.getElementById(`step-${currentStep}`).classList.remove('step-hidden');
+                updateProgressBar();
+            }
         }
 
+        function updateProgressBar() {
+            let width = (currentStep / 3) * 100;
+            if(currentStep === 3 && document.getElementById('results-section').classList.contains('hidden') === false) width = 100;
+            document.getElementById('progress-bar').style.width = `${width}%`;
+        }
+
+        // Wybór scenariusza (Krok 1)
+        function selectScenario(id) {
+            selectedScenario = id;
+            // Reset styli kafelków
+            document.querySelectorAll('.scenario-tile').forEach(el => el.classList.remove('tile-selected'));
+            // Zaznacz wybrany
+            event.currentTarget.classList.add('tile-selected');
+            // Aktywuj przycisk Dalej
+            document.getElementById('btn-step1-next').removeAttribute('disabled');
+            document.getElementById('btn-step1-next').classList.remove('bg-gray-400', 'cursor-not-allowed');
+            document.getElementById('btn-step1-next').classList.add('bg-primary', 'hover:bg-teal-700');
+
+            // Dostosuj Krok 2 w zależności od wyboru
+            const labelPV = document.getElementById('label-pv-power');
+            const selectCapacity = document.getElementById('battery-capacity');
+
+            if (id === 2) {
+                labelPV.innerText = "Planowana moc instalacji PV (kWp):";
+                // Dla nowej instalacji, domyślnie DC
+                selectCapacity.innerHTML = `
+                    <option value="10">Około 10 kWh (System DC)</option>
+                    <option value="15">Około 15 kWh (System DC)</option>
+                    <option value="20">Około 20 kWh (System DC)</option>
+                `;
+            } else {
+                labelPV.innerText = "Moc Twojej obecnej instalacji PV (kWp):";
+                if (id === 1) {
+                     // Retrofit AC
+                    selectCapacity.innerHTML = `
+                        <option value="10">Około 10 kWh (System AC Retrofit)</option>
+                        <option value="15">Około 15 kWh (System AC Retrofit)</option>
+                        <option value="20">Około 20 kWh (System AC Retrofit)</option>
+                    `;
+                } else {
+                    // Wymiana na hybrydę (DC)
+                    selectCapacity.innerHTML = `
+                        <option value="10">Około 10 kWh (System DC + Nowy Falownik)</option>
+                        <option value="15">Około 15 kWh (System DC + Nowy Falownik)</option>
+                        <option value="20">Około 20 kWh (System DC + Nowy Falownik)</option>
+                    `;
+                }
+            }
+        }
+
+
+        // === GŁÓWNA FUNKCJA LICZĄCA (Krok 3 -> Wyniki) ===
         function calculateResults() {
-            const pv = parseFloat(document.getElementById('pv-power').value) || 0;
-            const cap = document.getElementById('battery-capacity').value;
-            let gross = PRICES['battery_'+cap];
-            if(selectedScenario===1) gross += PRICES.retrofit;
-            if(selectedScenario===2) gross += (pv * PRICES.pv) + PRICES.hybrid;
-            if(selectedScenario===3) gross += PRICES.hybrid + 3000;
-            if(document.getElementById('opt-backup').checked) gross += PRICES.backup;
-            if(document.getElementById('opt-ems').checked) gross += PRICES.ems;
+            // Pobierz dane z formularzy
+            const pvPower = parseFloat(document.getElementById('pv-power').value) || 0;
+            const capacitySelect = document.getElementById('battery-capacity').value;
+            const hasBackup = document.getElementById('opt-backup').checked;
+            const hasEMS = document.getElementById('opt-ems').checked;
 
-            let grant = (parseInt(cap) >= 9) ? 16000 : 0;
-            let final = gross - grant - ((gross-grant)*0.12);
+            let totalGross = 0;
 
-            // Wyświetlanie
-            document.getElementById('res-gross').innerText = fmt(gross);
-            document.getElementById('res-grant').innerText = "- " + fmt(grant);
-            document.getElementById('res-final').innerText = fmt(final);
+            // Logika cenowa zależna od scenariusza
+            let baseBatteryPrice = PRICES[`battery_${capacitySelect}kWh_DC`];
 
-            // PRZEKAZANIE DANYCH DO UKRYTYCH PÓL FORMULARZA
-            document.getElementById('form-cap').value = cap + " kWh";
-            document.getElementById('form-price').value = fmt(final);
-            document.getElementById('form-grant').value = fmt(grant);
+            if (selectedScenario === 1) {
+                // Retrofit AC: Cena baterii DC + dopłata za system AC inwertera
+                totalGross = baseBatteryPrice + PRICES.battery_AC_premium;
+            } else if (selectedScenario === 2) {
+                // Nowa instalacja: PV + Hybryda + Bateria
+                totalGross = (pvPower * PRICES.pv_per_kwp) + PRICES.hybrid_inverter_cost + baseBatteryPrice;
+            } else if (selectedScenario === 3) {
+                // Wymiana: Bateria + Hybryda + Robocizna wymiany
+                totalGross = baseBatteryPrice + PRICES.hybrid_inverter_cost + PRICES.swap_labor_cost;
+            }
 
+            // Dodatki
+            if (hasBackup) totalGross += PRICES.backup_box;
+            if (hasEMS) totalGross += PRICES.ems_system;
+
+            // Logika Dotacji (na podstawie notatki z Konsultacji: min 9kWh dla pełnej dotacji)
+            let grant = 0;
+            if (parseInt(capacitySelect) >= 9) {
+                // Zakładamy uproszczoną maksymalną dotację na magazyn z Mój Prąd 6.0 (wg notatek ~16k)
+                grant = 16000;
+                // Jeśli scenariusz 2 (nowa instalacja), można dodać dotację na PV (np. 6000), ale dla uproszczenia skupiamy się na magazynie.
+            }
+
+            // Ulga Termomodernizacyjna (uproszczone 12% od podstawy opodatkowania po odjęciu dotacji)
+            // Zakładamy VAT 8% na usługę kompleksową (więc netto = brutto / 1.08)
+            let taxableBase = (totalGross / 1.08) - grant;
+            let taxRelief = taxableBase * 0.12;
+
+            if (taxRelief < 0) taxRelief = 0;
+
+            let finalCost = totalGross - grant - taxRelief;
+
+            // Rata (uproszczony kredyt 5 lat, ok 8% w skali roku)
+            let monthlyLoan = (finalCost * 1.4) / 60; // 1.4 to szacunkowy całkowity koszt kredytu przez 5 lat
+
+            // === AKTUALIZACJA UI WYNIKÓW ===
+            document.getElementById('res-gross').innerText = formatPLN(totalGross);
+            document.getElementById('res-grant').innerText = "-" + formatPLN(grant);
+            document.getElementById('res-tax-relief').innerText = "-" + formatPLN(taxRelief);
+            document.getElementById('res-final').innerText = formatPLN(finalCost);
+            document.getElementById('res-loan').innerText = formatPLN(monthlyLoan) + " / mc";
+
+            // Pokaż sekcję wyników
             document.getElementById('step-3').classList.add('step-hidden');
             document.getElementById('results-section').classList.remove('hidden');
-            document.getElementById('progress-bar').style.width = '100%';
-            renderChart(final);
+            updateProgressBar();
+
+            // Narysuj wykres
+            renderChart(finalCost);
+            // Scroll do wyników
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function fmt(n) { return new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', maximumFractionDigits: 0 }).format(n); }
+        // Helper do formatowania waluty
+        function formatPLN(number) {
+            return new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', maximumFractionDigits: 0 }).format(number);
+        }
 
-        function renderChart(invest) {
+
+        // === RYSOWANIE WYKRESU ROI (Chart.js) ===
+        function renderChart(investmentCost) {
             const ctx = document.getElementById('roiChart').getContext('2d');
-            if(myChart) myChart.destroy();
+
+            // Jeśli wykres już istnieje, zniszcz go przed narysowaniem nowego
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            // DANE DO SYMULACJI ROI (Uproszczony model na bazie "Magazyny Mocy")
+            // Założenia:
+            // 1. Roczny koszt prądu bez PV/Magazynu: ok. 5000 zł (rosnący 5% r/r)
+            // 2. Oszczędność dzięki magazynowi: ok. 60-70% rachunku.
+
+            const years = 15;
+            const labels = Array.from({length: years + 1}, (_, i) => i === 0 ? 'Start' : `Rok ${i}`);
+            
+            let annualEnergyCostBase = 5000; // Startowy roczny rachunek bez systemu
+            let energyInflation = 1.05; // Wzrost cen prądu 5% rocznie
+            
+            let cumulativeCostWithoutSystem = [0];
+            let cumulativeCostWithSystem = [investmentCost]; // Na starcie koszt inwestycji
+
+            let currentBaseCost = annualEnergyCostBase;
+            
+            for (let i = 1; i <= years; i++) {
+                // Bez systemu: po prostu dodajemy roczny rachunek, który rośnie
+                cumulativeCostWithoutSystem.push(cumulativeCostWithoutSystem[i-1] + currentBaseCost);
+                
+                // Z systemem: płacimy tylko np. 30% starego rachunku (opłaty stałe, brak słońca zimą)
+                let annualCostWithStorage = currentBaseCost * 0.30; 
+                cumulativeCostWithSystem.push(cumulativeCostWithSystem[i-1] + annualCostWithStorage);
+
+                // Inflacja cen energii na kolejny rok
+                currentBaseCost *= energyInflation;
+            }
+
+            // Konfiguracja Chart.js
             myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Start', '5 lat', '10 lat', '15 lat'],
+                    labels: labels,
                     datasets: [
-                        { label: 'Oszczędność', data: [invest, invest*0.6, invest*0.2, 0], borderColor: '#E31E24', fill: true, backgroundColor: 'rgba(227,30,36,0.1)', tension: 0.3 }
+                        {
+                            label: 'Skumulowany koszt BEZ magazynu (Rachunki)',
+                            data: cumulativeCostWithoutSystem,
+                            borderColor: '#ef4444', // Czerwony
+                            backgroundColor: '#ef444480',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: 'Skumulowany koszt Z magazynem (Inwestycja + Rachunki)',
+                            data: cumulativeCostWithSystem,
+                            borderColor: '#0d9488', // Primary teal
+                            backgroundColor: '#0d948820',
+                            borderWidth: 3,
+                            fill: true // Wypełnienie pod wykresem
+                        }
                     ]
                 },
-                options: { plugins: { legend: { display: false } }, scales: { y: { display: false } } }
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Suma wydatków (PLN)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value / 1000 + ' tys. zł';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatPLN(context.raw);
+                                }
+                            }
+                        }
+                    }
+                }
             });
         }
-
-        // Obsługa wysyłki bez przeładowania strony
-        const form = document.getElementById('contact-form');
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            const data = new FormData(form);
-            const response = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
-            if (response.ok) {
-                form.classList.add('hidden');
-                document.getElementById('form-success').classList.remove('hidden');
-            }
-        };
     </script>
+
 </body>
 </html>
