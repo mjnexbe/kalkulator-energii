@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Magazynu Energii - Nexbe Partner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 20px; }
+        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <div class="gradient-bg text-white py-12 px-4 text-center">
+        <h1 class="text-3xl font-bold">Kalkulator Doboru Magazynu Energii</h1>
+        <p class="mt-2 text-blue-100">Oblicz dotacje i zysk z inwestycji w 30 sekund</p>
+    </div>
+
+    <div class="max-w-4xl mx-auto -mt-10 p-4">
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="card">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Parametry instalacji</h2>
+                
+                <label class="block mb-2 text-sm font-medium">Wybierz pojemność (FoxESS):</label>
+                <select id="pojemnosc" class="w-full p-2 border rounded mb-4" onchange="oblicz()">
+                    <option value="10">FoxESS 10.24 kWh</option>
+                    <option value="15">FoxESS 15.36 kWh</option>
+                    <option value="20">FoxESS 20.48 kWh</option>
+                </select>
+
+                <label class="block mb-2 text-sm font-medium">Opcje dodatkowe:</label>
+                <div class="space-y-2 mb-4">
+                    <label class="flex items-center"><input type="checkbox" id="backup" class="mr-2" onchange="oblicz()"> System Backup (SZR)</label>
+                    <label class="flex items-center"><input type="checkbox" id="ems" class="mr-2" onchange="oblicz()"> System EMS (Smart)</label>
+                </div>
+
+                <label class="block mb-2 text-sm font-medium">Długość kabla (powyżej 15m):</label>
+                <input type="number" id="kabel" value="0" min="0" class="w-full p-2 border rounded" onchange="oblicz()">
+            </div>
+
+            <div class="card bg-blue-50 border-2 border-blue-200">
+                <h2 class="text-xl font-semibold mb-4 text-blue-800">Twoja Oferta</h2>
+                <div class="space-y-3 text-gray-700">
+                    <div class="flex justify-between"><span>Cena instalacji (Brutto):</span> <span id="cena-brutto" class="font-bold">0 zł</span></div>
+                    <div class="flex justify-between text-green-600 font-medium"><span>Dotacja Mój Prąd:</span> <span id="dotacja">- 0 zł</span></div>
+                    <div class="flex justify-between text-green-600 font-medium"><span>Ulga Termomodernizacyjna:</span> <span id="ulga">- 0 zł</span></div>
+                    <hr class="border-blue-200">
+                    <div class="flex justify-between text-xl text-blue-900 font-bold"><span>Koszt finalny:</span> <span id="final">0 zł</span></div>
+                    <div class="bg-white p-3 rounded mt-4 border border-blue-100 text-center">
+                        <p class="text-sm text-gray-500">Miesięczna rata już od:</p>
+                        <p id="rata" class="text-2xl font-bold text-blue-600">0 zł</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function oblicz() {
+            // Ceny bazowe (zgodnie z notatką)
+            const cenyBaterii = { "10": 28000, "15": 38000, "20": 48000 };
+            const cenaSZR = 2500;
+            const cenaEMS = 1500;
+            const cenaKabelMetr = 45;
+
+            let poj = document.getElementById('pojemnosc').value;
+            let suma = cenyBaterii[poj];
+
+            if(document.getElementById('backup').checked) suma += cenaSZR;
+            if(document.getElementById('ems').checked) suma += cenaEMS;
+            
+            let dodatkowyKabel = parseInt(document.getElementById('kabel').value);
+            if(dodatkowyKabel > 0) suma += (dodatkowyKabel * cenaKabelMetr);
+
+            // Logika dotacji (z pliku Konsultacje: min 9kWh/12kWh)
+            let dotacja = 0;
+            if(parseInt(poj) >= 9) dotacja = 16000;
+
+            // Ulga termo (12% od kwoty po dotacji)
+            let ulga = (suma - dotacja) * 0.12;
+            let final = suma - dotacja - ulga;
+            let rata = final / 60 * 1.07; // szacunkowy kredyt 7%
+
+            // Wyświetlanie
+            document.getElementById('cena-brutto').innerText = suma.toLocaleString() + " zł";
+            document.getElementById('dotacja').innerText = "- " + dotacja.toLocaleString() + " zł";
+            document.getElementById('ulga').innerText = "- " + Math.round(ulga).toLocaleString() + " zł";
+            document.getElementById('final').innerText = Math.round(final).toLocaleString() + " zł";
+            document.getElementById('rata').innerText = Math.round(rata).toLocaleString() + " zł";
+        }
+        oblicz(); // Wywołanie na starcie
+    </script>
+</body>
+</html>
